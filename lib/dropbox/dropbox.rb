@@ -19,7 +19,7 @@ class DropBox
 	end
 	
 	def login
-		page = @agent.get('https://www.getdropbox.com/login')
+		page = @agent.get('https://www.dropbox.com/login')
 		login_form = page.forms.detect { |f| f.action == "/login" }
 		login_form.login_email = @email
 		login_form.login_password = @password
@@ -52,8 +52,8 @@ class DropBox
 			details = {}
 			details['name'] = file.at('div.details-filename a').content.strip
 			details['url']  = file.at('div.details-filename a')["href"]
-			details['size'] = file.at('div.details-size a').try(:content).try(:strip)
-			details['modified'] = file.at('div.details-modified a').try(:content).try(:strip)
+			#details['size'] = file.at('div.details-size a').try(:content).try(:strip)
+			#details['modified'] = file.at('div.details-modified a').try(:content).try(:strip)
 			
 			if match_data = details['url'].match(/^\/browse_plain(.*)$/)
 				details['directory'] = true
@@ -102,8 +102,8 @@ class DropBox
 		
 		path = namespace_path(path)
 		
-		#https://dl-web.getdropbox.com/get/testing.txt?w=0ff80d5d&sjid=125987568
-		@agent.get("https://dl-web.getdropbox.com/get/#{path}").content
+		#https://dl-web.dropbox.com/get/testing.txt?w=0ff80d5d&sjid=125987568
+		@agent.get("https://dl-web.dropbox.com/get/#{path}").content
 	end
 		
 	def create_directory(new_path, destination = "/" )
@@ -117,14 +117,14 @@ class DropBox
 	def create(file, destination = "/")
 		# change to before filter
 		if @logged_in
-			home_page = @agent.get('https://www.getdropbox.com/home')
+			home_page = @agent.get('https://www.dropbox.com/home')
 		else
 			home_page = login
 		end
 		
 		destination = namespace_path(destination)
 
-		upload_form = home_page.forms.detect{ |f| f.action == "https://dl-web.getdropbox.com/upload" }
+		upload_form = home_page.forms.detect{ |f| f.action == "https://dl-web.dropbox.com/upload" }
 		upload_form.dest = "/#{@folder_namespace}/#{destination}"
 		upload_form.file_uploads.first.file_name = file if file
 		
