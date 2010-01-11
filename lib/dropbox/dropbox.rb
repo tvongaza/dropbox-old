@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'nokogiri'
 require 'mechanize'
 
@@ -58,9 +57,11 @@ class DropBox
 			if match_data = details['url'].match(/^\/browse_plain(.*)$/)
 				details['directory'] = true
 				details['path'] = normalize_namespace(match_data[1])
-			else
+			elsif match_data = details['url'].match(%r{^https?://[^/]*/get(.*)$})
 				details['directory'] = false
-				details['path'] = normalize_namespace(details['url'][33..-1])
+				details['path'] = normalize_namespace(match_data[1])
+			else
+				raise "could not parse path from Dropbox URL: #{details['url'] }"
 			end
 			
 			details
@@ -122,10 +123,8 @@ class DropBox
 			home_page = login
 		end
 		
-		destination = namespace_path(destination)
-
 		upload_form = home_page.forms.detect{ |f| f.action == "https://dl-web.dropbox.com/upload" }
-		upload_form.dest = "/#{@folder_namespace}/#{destination}"
+		upload_form.dest = namespace_path(destination)
 		upload_form.file_uploads.first.file_name = file if file
 		
 		@agent.submit(upload_form)
@@ -172,3 +171,7 @@ class DropBox
 	end
 
 end
+
+# this file doesn't use the standard ruby indent settings, so the following
+# modeline will make sure that the whitespace stays consistent.
+# vim:noexpandtab tabstop=4 shiftwidth=4
