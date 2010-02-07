@@ -60,6 +60,9 @@ class DropBox
 			elsif match_data = details['url'].match(%r{^https?://[^/]*/get(.*)$})
 				details['directory'] = false
 				details['path'] = normalize_namespace(match_data[1])
+      elsif match_data = details['url'].match(%r{^https?://[^/]*/u/\d*/(.*)$})
+          details['directory'] = false
+          details['path'] = "Public/#{match_data[1]}"
 			else
 				raise "could not parse path from Dropbox URL: #{details['url'] }"
 			end
