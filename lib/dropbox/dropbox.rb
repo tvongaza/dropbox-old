@@ -1,7 +1,7 @@
 require 'nokogiri'
 require 'mechanize'
 
-WWW::Mechanize.html_parser = Nokogiri::HTML
+Mechanize.html_parser = Nokogiri::HTML
 
 # TODO: Tests (mock out expected DropBox output)
 # TODO: Directory object, File object
@@ -12,7 +12,7 @@ class DropBox
 	def initialize(email, password, folder_namespace = "")
 		@email = email
 		@password = password
-		@agent = WWW::Mechanize.new
+		@agent = Mechanize.new
 		@folder_namespace = folder_namespace.gsub(/^\//,"")
 		@logged_in = false
 	end
