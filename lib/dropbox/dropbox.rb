@@ -137,6 +137,7 @@ class DropBox
 		create(file, destination)
 	end
 	
+	# Renames a file or folder in the DropBox
 	def rename(file, destination)
 		login_filter
 		file = namespace_path(file)
@@ -144,6 +145,7 @@ class DropBox
 		@agent.post("/cmd/rename#{file}", {"to_path"=> destination, "t" => @token })		
 	end
 	
+	# Deletes a file/folder from the DropBox (accepts string path or an array of string paths)
 	def destroy(paths)
 		login_filter
 		paths = [paths].flatten
@@ -151,6 +153,7 @@ class DropBox
 		@agent.post("/cmd/delete", {"files"=> paths, "t" => @token })
 	end
 
+  # Permanently deletes a file from the DropBox (no history!) accepts arrays, as #destroy does
 	def purge(paths)
 		login_filter
 		paths = [paths].flatten
@@ -158,6 +161,7 @@ class DropBox
 		@agent.post("/cmd/purge", {"files"=> paths, "t" => @token })
 	end
 	
+	# Will give a hash of the amount of space left on the DropBox, the amound used, the calculated amount free (all as a 1 d.p. rounded GB value) and the percentage used (scraped)
 	def usage_stats
 	  login_filter
 	  @agent.get("/account").at('#usage-percent').content.scan(/(\d+(?:\.\d+)?)%\ used\ \((\d+(?:\.\d+)?)([MG])B of (\d+(?:\.\d+)?)GB\)/).collect{|d| {:used => d[1].to_f * ((d[2] == "M") ? 1024 : 1), :total => d[3].to_f, :free => (d[3].to_f - d[1].to_f * ((d[2] == "M") ? 1024 : 1)), :percent => Percentage.new(d[0].to_f/100)} }[0]
