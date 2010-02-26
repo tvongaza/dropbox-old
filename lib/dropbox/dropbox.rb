@@ -157,6 +157,11 @@ class DropBox
 		paths = paths.collect { |path| namespace_path(path) }
 		@agent.post("/cmd/purge", {"files"=> paths, "t" => @token })
 	end
+	
+	def usage_stats
+	  login_filter
+	  @agent.get("/account").at('#usage-percent').content.scan(/(\d+(?:\.\d+)?)%\ used\ \((\d+(?:\.\d+)?)([MG])B of (\d+(?:\.\d+)?)GB\)/).collect{|d| {:used => d[1].to_f * ((d[2] == "M") ? 1024 : 1), :total => d[3].to_f, :free => (d[3].to_f - d[1].to_f * ((d[2] == "M") ? 1024 : 1)), :percent => Percentage.new(d[0].to_f/100)} }[0]
+  end
 
 	private
 	def namespace_path(path)
