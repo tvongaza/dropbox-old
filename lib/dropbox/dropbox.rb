@@ -17,30 +17,7 @@ class DropBox
 		@logged_in = false
 	end
 	
-	def login
-		page = @agent.get('https://www.dropbox.com/login')
-		login_form = page.forms.detect { |f| f.action == "/login" }
-		login_form.login_email = @email
-		login_form.login_password = @password
-		
-		home_page = @agent.submit(login_form)
-		# todo check if we are logged in! (ie search for email and "Log out"
-		@logged_in = true
-		@token = home_page.at('//script[contains(text(), "TOKEN")]').content.match("TOKEN: '(.*)',$")[1]
-		
-		# check if we have our namespace
-		
-		home_page
-	end
-	
-	def login_filter
-		login unless @logged_in
-	end
-		
-	def list(path = "/")
-		index(path)
-	end
-	
+	# Lists all the files and folders in a given directory
 	def index(path = "/")
  		login_filter
 		path = namespace_path(path)
@@ -73,6 +50,9 @@ class DropBox
 		return listing
 	end
 	
+	alias :list :index
+	
+	# Lists the full history for a file on DropBox
 	def list_history(path)
 		login_filter
 		
@@ -95,11 +75,8 @@ class DropBox
 		
 		return listing
 	end
-
-	def get(path)
-		show(path)
-	end
 	
+	# Downloads the specified file from DropBox
 	def show(path)
 		# change to before filter
 		login_filter
@@ -109,15 +86,18 @@ class DropBox
 		#https://dl-web.dropbox.com/get/testing.txt?w=0ff80d5d&sjid=125987568
 		@agent.get("https://dl-web.dropbox.com/get/#{path}").content
 	end
-		
+	
+	alias :get :show
+	
+	# Creates a directory
 	def create_directory(new_path, destination = "/" )
 		# change to before filter
 		login unless @logged_in
 		destination = namespace_path(destination)
-		@agent.post("/cmd/new#{destination}",{"to_path"=>new_path, "folder"=>"yes", "t" => @token })
-		# check status code
+		@agent.post("/cmd/new#{destination}",{"to_path"=>new_path, "folder"=>"yes", "t" => @token }).code == "200"
 	end
 	
+	# Uploads a file to DropBox under the given filename
 	def create(file, destination = "/")
 		# change to before filter
 		if @logged_in
@@ -130,19 +110,17 @@ class DropBox
 		upload_form.dest = namespace_path(destination)
 		upload_form.file_uploads.first.file_name = file if file
 		
-		@agent.submit(upload_form)
+		@agent.submit(upload_form).code == "200"
 	end
-
-	def update(file, destination = "/")
-		create(file, destination)
-	end
+	
+  alias :update :create
 	
 	# Renames a file or folder in the DropBox
 	def rename(file, destination)
 		login_filter
 		file = namespace_path(file)
 		destination = namespace_path(destination)
-		@agent.post("/cmd/rename#{file}", {"to_path"=> destination, "t" => @token })		
+		@agent.post("/cmd/rename#{file}", {"to_path"=> destination, "t" => @token }).code == "200"
 	end
 	
 	# Deletes a file/folder from the DropBox (accepts string path or an array of string paths)
@@ -150,7 +128,7 @@ class DropBox
 		login_filter
 		paths = [paths].flatten
 		paths = paths.collect { |path| namespace_path(path) }
-		@agent.post("/cmd/delete", {"files"=> paths, "t" => @token })
+		@agent.post("/cmd/delete", {"files"=> paths, "t" => @token }).code == "200"
 	end
 
   # Permanently deletes a file from the DropBox (no history!) accepts arrays, as #destroy does
@@ -158,7 +136,7 @@ class DropBox
 		login_filter
 		paths = [paths].flatten
 		paths = paths.collect { |path| namespace_path(path) }
-		@agent.post("/cmd/purge", {"files"=> paths, "t" => @token })
+		@agent.post("/cmd/purge", {"files"=> paths, "t" => @token }).code == "200"
 	end
 	
 	# Will give a hash of the amount of space left on the DropBox, the amound used, the calculated amount free (all as a 1 d.p. rounded GB value) and the percentage used (scraped)
@@ -182,6 +160,25 @@ class DropBox
 		file.gsub(/^\/#{@folder_namespace}/,"")
 	end
 
+  def login
+		page = @agent.get('https://www.dropbox.com/login')
+		login_form = page.forms.detect { |f| f.action == "/login" }
+		login_form.login_email = @email
+		login_form.login_password = @password
+		
+		home_page = @agent.submit(login_form)
+		# todo check if we are logged in! (ie search for email and "Log out"
+		@logged_in = true
+		@token = home_page.at('//script[contains(text(), "TOKEN")]').content.match("TOKEN: '(.*)',$")[1]
+		
+		# check if we have our namespace
+		
+		home_page
+	end
+	
+	def login_filter
+		login unless @logged_in
+	end
 end
 
 # this file doesn't use the standard ruby indent settings, so the following
