@@ -13,7 +13,7 @@ begin
     gem.description = %Q{A Simple DropBox API in Ruby}
     gem.email = "jphastings@gmail.com"
     gem.homepage = "http://github.com/jphastings/DropBox"
-    gem.authors = ["JP Hastings-Spital","github.com/chrissearle","github.com/tvongaza"]
+    gem.authors = ["JP Hastings-Spital","Chris Searle","Tys von Gaza","Nicholas A. Evans"]
     gem.add_development_dependency "Shoulda"
     gem.add_dependency "mechanize"
     gem.add_dependency "nokogiri"
