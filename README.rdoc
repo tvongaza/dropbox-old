@@ -1,6 +1,8 @@
 = DropBox
 
-A simple Ruby API for DropBox
+A simple Ruby API for DropBox.
+
+* Don't have a dropbox account?  Well you should!  You can "donate" to this project by signing up with this referral url: https://www.dropbox.com/referrals/NTI0MDI3MzU5
 
 == INSTALL:
 * sudo gem install dropbox
