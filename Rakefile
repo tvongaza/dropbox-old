@@ -15,8 +15,8 @@ begin
     gem.homepage = "http://github.com/tvongaza/DropBox"
     gem.authors = ["Tys von Gaza","JP Hastings-Spital","Chris Searle","Nicholas A. Evans"]
     gem.add_development_dependency "Shoulda"
-    gem.add_dependency "mechanize"
-    gem.add_dependency "nokogiri"
+    gem.add_dependency "mechanize",'>= 1.0.0'
+    gem.add_dependency "nokogiri", '>= 1.2.1'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
