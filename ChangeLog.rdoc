@@ -1,2 +1,7 @@
+== 0.0.7 (March 11, 2010):
+* Fixed stats
+* Added some additional documentation
+* Running into issue creating files, anyone else?
+
 == 0.0.6:
 * Explicit minimum dependency versions
