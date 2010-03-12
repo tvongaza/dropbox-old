@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'nokogiri'
 require 'mechanize'
 
@@ -142,7 +143,24 @@ class DropBox
 	# Will give a hash of the amount of space left on the DropBox, the amound used, the calculated amount free (all as a 1 d.p. rounded GB value) and the percentage used (scraped)
 	def usage_stats
 	  login_filter
-	  @agent.get("/account").at('#usage-percent').content.scan(/(\d+(?:\.\d+)?)%\ used\ \((\d+(?:\.\d+)?)([MG])B of (\d+(?:\.\d+)?)GB\)/).collect{|d| {:used => d[1].to_f * ((d[2] == "M") ? 1024 : 1), :total => d[3].to_f, :free => (d[3].to_f - d[1].to_f * ((d[2] == "M") ? 1024 : 1)), :percent => Percentage.new(d[0].to_f/100)} }[0]
+    
+	  stats_page = @agent.get("/account")
+	  
+	  stats = stats_page.at('#usage-percent').content.scan(/(\d+(?:\.\d+)?)%\ used\ \((\d+(?:\.\d+)?)([MG])B of (\d+(?:\.\d+)?)GB\)/).collect{ |d|
+	    { :used => d[1].to_f * ((d[2] == "G") ? 1024 : 1),
+	      :total => d[3].to_f * 1024,
+	      :free => (d[3].to_f * 1024 - d[1].to_f * ((d[2] == "G") ? 1024 : 1)),
+	      :percent => Percentage.new(d[0].to_f/100)
+	    }
+	  }[0]
+	  
+	  regular_data = stats_page.at('span.bar-graph-legend.bar-graph-normal').next.content.scan(/\((\d+(?:\.\d+)?)([MG])B/)[0]
+	  stats[:regular_used] = regular_data[0].to_f * ((regular_data[1] == "G") ? 1024 : 1)
+
+	  shared_data = stats_page.at('span.bar-graph-legend.bar-graph-shared').next.content.scan(/\((\d+(?:\.\d+)?)([MG])B/)[0]
+	  stats[:shared_used] = shared_data[0].to_f * ((shared_data[1] == "G") ? 1024 : 1)
+
+    return stats
   end
 
 	private
