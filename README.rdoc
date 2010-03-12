@@ -1,6 +1,6 @@
 = DropBox
 
-A simple Ruby API for DropBox.
+A simple stop-gap Ruby API for DropBox.  Hopefully DropBox will release a real API soon!
 
 * Don't have a dropbox account?  Well you should!  You can "donate" to this project by signing up with this referral url: https://www.dropbox.com/referrals/NTI0MDI3MzU5
 
