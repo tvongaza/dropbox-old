@@ -9,5 +9,12 @@ A simple Ruby API for DropBox.
 
 == USAGE:
 
-  d = DropBox.new("you@email.com","password!")
-  p d.list("/")
+  d = DropBox.new("you@email.com","password!")      #login
+  d.list("/")                                       # show directory contents
+  d.create_directory("/testdirectory")              # create a remove directory
+  d.create("/local/path/to/file.txt","/testdirectory")    # upload a file to the directory
+  d.rename("/testdirectory/file.txt","file.txt")    # rename the file
+  d.destroy("file.txt")                             # remove the file
+  
+  d2 = d = DropBox.new("you@email.com","password!", "optional_namespace") # all actions will happen in /optional_namesapce
+  
