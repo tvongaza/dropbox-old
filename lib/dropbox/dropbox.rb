@@ -158,7 +158,7 @@ class DropBox
 	  stats[:regular_used] = regular_data[0].to_f * ((regular_data[1] == "G") ? 1024 : 1) unless regular_data.nil?
 
 	  shared_data = stats_page.at('span.bar-graph-legend.bar-graph-shared').next.content.scan(/\((\d+(?:\.\d+)?)([MG])B/)[0]
-	  stats[:shared_used] = shared_data[0].to_f * ((shared_data[1] == "G") ? 1024 : 1) unless regular_data.nil?
+	  stats[:shared_used] = shared_data[0].to_f * ((shared_data[1] == "G") ? 1024 : 1) unless shared_data.nil?
 
     return stats
   end
