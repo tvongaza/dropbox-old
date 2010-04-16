@@ -1,3 +1,6 @@
+== 0.0.10 (April 16, 2010):
+* Fixed a bug downloading files (tvongaza)
+
 == 0.0.9 (April 16, 2010):
 * Really fixed bug with empty stats (chrissearle)
 * Fixed a bug uploading files (Luka87)
@@ -6,8 +9,8 @@
 * Fixed bug with empty stats (chrissearle)
 
 == 0.0.7 (March 11, 2010):
-* Fixed stats
-* Added some additional documentation
+* Fixed stats (chrissearle)
+* Added some additional documentation (tvongaza)
 * Running into issue creating files, anyone else?
 
 == 0.0.6 (March 4, 2010);

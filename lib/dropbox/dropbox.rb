@@ -18,6 +18,10 @@ class DropBox
 		@logged_in = false
 	end
 	
+	def agent
+	  @agent
+  end
+	
 	# Lists all the files and folders in a given directory
 	def index(path = "/")
  		login_filter
@@ -79,13 +83,17 @@ class DropBox
 	
 	# Downloads the specified file from DropBox
 	def show(path)
+	  require 'pathname'
 		# change to before filter
 		login_filter
 		
-		path = namespace_path(path)
+		# round about way of getting the secure url we need
+    # path = namespace_path(path)
+		pathname = Pathname.new(path)
+		url = self.list(pathname.dirname.to_s).detect{ |f| f["name"] == pathname.basename.to_s }["url"]
 		
 		#https://dl-web.dropbox.com/get/testing.txt?w=0ff80d5d&sjid=125987568
-		@agent.get("https://dl-web.dropbox.com/get/#{path}").content
+		@agent.get(url).content
 	end
 	
 	alias :get :show
