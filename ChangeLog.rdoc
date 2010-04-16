@@ -1,5 +1,9 @@
+== 0.0.9 (April 16, 2010):
+* Really fixed bug with empty stats (chrissearle)
+* Fixed a bug uploading files (Luka87)
+
 == 0.0.8 (March 12, 2010):
-* Fixed bug with empty stats
+* Fixed bug with empty stats (chrissearle)
 
 == 0.0.7 (March 11, 2010):
 * Fixed stats

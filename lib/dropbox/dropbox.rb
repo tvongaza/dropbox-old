@@ -167,11 +167,12 @@ class DropBox
 	def namespace_path(path)
 		# remove the start slash if we have one
 		path.gsub(/^\//,"")
-		if @folder_namespace.empty?
+		new_path = if @folder_namespace.empty?
 			"/#{path}"
 		else
-			"/#{@folder_namespace}/#{path}"			
+			"/#{@folder_namespace}/#{path}"
 		end
+		new_path.gsub("//","/")
 	end
 	
 	def normalize_namespace(file)
