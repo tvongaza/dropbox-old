@@ -1,6 +1,7 @@
 = DropBox
 
 DEPRECIATION WARNING: This gem is being depreciated for: http://github.com/RISCfuture/dropbox
+
 NOTE: Dropbox has announced their official API.  See more here: http://blog.dropbox.com/?p=492
 
 A simple stop-gap Ruby API for DropBox.
